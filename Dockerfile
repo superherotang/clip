@@ -19,6 +19,10 @@ COPY docker-entrypoint.sh ./docker-entrypoint.sh
 
 # Generate Prisma Client
 ENV DATABASE_URL="file:./dev.db"
+# Ensure schema.prisma doesn't have url property (Prisma 7 compatibility)
+RUN grep -q '^\s*url\s*=' prisma/schema.prisma && \
+    sed -i '/^\s*url\s*=/d' prisma/schema.prisma || \
+    echo "Schema already clean"
 RUN corepack enable pnpm && pnpm prisma generate
 
 # Build Next.js
