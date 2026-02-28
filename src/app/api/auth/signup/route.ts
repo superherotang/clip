@@ -4,12 +4,12 @@ import { hashPassword, generateApiKey, createSession } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, username, password } = await request.json();
+    const { username, password } = await request.json();
 
     // Validation
-    if (!email || !username || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "Email, username and password are required" },
+        { error: "Username and password are required" },
         { status: 400 }
       );
     }
@@ -21,16 +21,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (username.length < 3) {
+      return NextResponse.json(
+        { error: "Username must be at least 3 characters" },
+        { status: 400 }
+      );
+    }
+
     // Check if user already exists
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [{ email }, { username }],
-      },
+    const existingUser = await prisma.user.findUnique({
+      where: { username },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "Email or username already exists" },
+        { error: "Username already exists" },
         { status: 400 }
       );
     }
@@ -41,14 +46,12 @@ export async function POST(request: NextRequest) {
 
     const user = await prisma.user.create({
       data: {
-        email,
         username,
         password: hashedPassword,
         apiKey,
       },
       select: {
         id: true,
-        email: true,
         username: true,
         apiKey: true,
       },
@@ -58,13 +61,12 @@ export async function POST(request: NextRequest) {
     const sessionToken = await createSession({
       id: user.id,
       username: user.username,
-      email: user.email,
+      email: "",
     });
 
     const response = NextResponse.json({
       user: {
         id: user.id,
-        email: user.email,
         username: user.username,
       },
       apiKey: user.apiKey,

@@ -56,7 +56,11 @@ export async function getSession(): Promise<Session | null> {
     if (!token) return null;
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as unknown as Session;
+    return {
+      userId: (payload as any).userId,
+      username: (payload as any).username,
+      email: (payload as any).email || "",
+    };
   } catch {
     return null;
   }
@@ -66,7 +70,7 @@ export async function validateApiKey(apiKey: string): Promise<Session | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { apiKey },
-      select: { id: true, username: true, email: true },
+      select: { id: true, username: true },
     });
 
     if (!user) return null;
@@ -74,7 +78,7 @@ export async function validateApiKey(apiKey: string): Promise<Session | null> {
     return {
       userId: user.id,
       username: user.username,
-      email: user.email,
+      email: "",
     };
   } catch {
     return null;

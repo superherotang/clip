@@ -10,7 +10,7 @@ import Link from "next/link";
 export function LoginForm() {
   const router = useRouter();
   const t = useTranslations();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ export function LoginForm() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
@@ -50,11 +50,11 @@ export function LoginForm() {
         </div>
       )}
       <Input
-        label={t("Auth.login.email")}
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder={t("Auth.login.emailPlaceholder")}
+        label={t("Auth.login.username")}
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder={t("Auth.login.usernamePlaceholder")}
         required
       />
       <Input

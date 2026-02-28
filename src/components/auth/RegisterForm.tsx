@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useToast } from "@/components/ui/Toast";
 import Link from "next/link";
 
 export function RegisterForm() {
   const router = useRouter();
   const t = useTranslations();
-  const [email, setEmail] = useState("");
+  const { showSuccess } = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,13 +33,18 @@ export function RegisterForm() {
       return;
     }
 
+    if (username.length < 3) {
+      setError(t("Auth.errors.usernameTooShort"));
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
@@ -48,6 +54,7 @@ export function RegisterForm() {
       }
 
       setApiKey(data.apiKey);
+      showSuccess(t("Auth.errors.registrationSuccess"));
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Auth.errors.registrationFailed"));
     } finally {
@@ -62,14 +69,14 @@ export function RegisterForm() {
 
   const copyApiKey = () => {
     navigator.clipboard.writeText(apiKey);
-    alert(t("Auth.register.apiKeyTitle"));
+    showSuccess(t("Toast.copySuccess"));
   };
 
   if (apiKey) {
     return (
       <div className="space-y-4">
         <div className="bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 p-3 rounded-lg text-sm">
-          {t("Common.success")}
+          {t("Auth.errors.registrationSuccess")}
         </div>
         <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg text-sm">
           <p className="font-medium text-yellow-800 dark:text-yellow-400 mb-2">
@@ -101,14 +108,6 @@ export function RegisterForm() {
           {error}
         </div>
       )}
-      <Input
-        label={t("Auth.register.email")}
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder={t("Auth.register.emailPlaceholder")}
-        required
-      />
       <Input
         label={t("Auth.register.username")}
         type="text"

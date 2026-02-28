@@ -4,22 +4,21 @@ import { verifyPassword, createSession } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { username, password } = await request.json();
 
     // Validation
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Username and password are required" },
         { status: 400 }
       );
     }
 
     // Find user
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
       select: {
         id: true,
-        email: true,
         username: true,
         password: true,
       },
@@ -27,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid username or password" },
         { status: 401 }
       );
     }
@@ -37,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     if (!isValid) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid username or password" },
         { status: 401 }
       );
     }
@@ -46,13 +45,12 @@ export async function POST(request: NextRequest) {
     const sessionToken = await createSession({
       id: user.id,
       username: user.username,
-      email: user.email,
+      email: "",
     });
 
     const response = NextResponse.json({
       user: {
         id: user.id,
-        email: user.email,
         username: user.username,
       },
       message: "Login successful",

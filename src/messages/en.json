@@ -55,22 +55,20 @@
   "Auth": {
     "login": {
       "title": "Login",
-      "email": "Email",
-      "emailPlaceholder": "Enter your email",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
       "password": "Password",
-      "passwordPlaceholder": "Enter your password",
+      "passwordPlaceholder": "Enter password",
       "submit": "Login",
       "noAccount": "Don't have an account?",
       "register": "Register"
     },
     "register": {
       "title": "Create Account",
-      "email": "Email",
-      "emailPlaceholder": "Enter your email",
       "username": "Username",
-      "usernamePlaceholder": "Choose a username",
+      "usernamePlaceholder": "Choose a username (at least 3 characters)",
       "password": "Password",
-      "passwordPlaceholder": "Choose a password",
+      "passwordPlaceholder": "Choose a password (at least 6 characters)",
       "confirmPassword": "Confirm Password",
       "confirmPasswordPlaceholder": "Confirm your password",
       "submit": "Register",
@@ -83,10 +81,12 @@
     "errors": {
       "passwordMismatch": "Passwords do not match",
       "passwordTooShort": "Password must be at least 6 characters",
+      "usernameTooShort": "Username must be at least 3 characters",
       "loginFailed": "Login failed",
       "registrationFailed": "Registration failed",
-      "invalidCredentials": "Invalid email or password",
-      "userExists": "Email or username already exists"
+      "registrationSuccess": "Registration successful!",
+      "invalidCredentials": "Invalid username or password",
+      "userExists": "Username already exists"
     }
   },
   "Rooms": {
