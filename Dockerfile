@@ -1,61 +1,48 @@
 # Build stage
 FROM node:24-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files
+# Install dependencies
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy source files
 COPY . .
-COPY docker-entrypoint.sh ./docker-entrypoint.sh
+
+# Fix Prisma 7 schema - remove url from datasource block
+RUN awk '/datasource db/{p=1} p&&/}/{p=0; print "datasource db {\n  provider = \"sqlite\"\n}"; next} !p{print}' prisma/schema.prisma > prisma/schema.prisma.tmp && \
+    mv prisma/schema.prisma.tmp prisma/schema.prisma
 
 # Generate Prisma Client
-ENV DATABASE_URL="file:./dev.db"
-# Fix Prisma 7 schema - remove url from datasource block
-RUN sed -i '/datasource db {/,/}/s/^\s*url\s*=.*$//' prisma/schema.prisma && \
-    cat prisma/schema.prisma
 RUN corepack enable pnpm && pnpm prisma generate
 
 # Build Next.js
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN corepack enable pnpm && pnpm build
 
-# Production image, copy all the files and run next
-FROM base AS runner
+# Production stage
+FROM node:24-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy built application
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-
-# Copy entrypoint script
-COPY --from=builder --chown=nextjs:nodejs /app/docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh
-
-USER nextjs
-
-EXPOSE 3000
-
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
-CMD ["node", "server.js"]
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy built application
+COPY --from=base --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=base --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=base --chown=nextjs:nodejs /app/public ./public
+COPY --from=base --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=base /app/package.json ./package.json
+
+# Create data directory
+RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
+
+USER nextjs
+EXPOSE 3000
+
+ENTRYPOINT ["node", "server.js"]
