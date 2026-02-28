@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clipboard-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/dev.db
+      - JWT_SECRET=${JWT_SECRET:-change-this-to-a-random-string-in-production}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-change-this-to-a-random-string-in-production}
+    volumes:
+      - clipboard-data:/app/data
+      - clipboard-uploads:/app/public/uploads
+    networks:
+      - clipboard-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/auth/me"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  clipboard-network:
+    driver: bridge
+
+volumes:
+  clipboard-data:
+    driver: local
+  clipboard-uploads:
+    driver: local

@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// User model for authentication
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  username     String   @unique
+  password     String   // Hashed password
+  apiKey       String   @unique // API key for third-party access
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  ownedRooms   Room[]   @relation("OwnedRooms")
+  roomMembers  RoomMember[]
+  clipboard    ClipboardItem[]
+}
+
+// Room model for organizing clipboard content
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  code        String   @unique // Room join code
+  ownerId     String
+  owner       User     @relation("OwnedRooms", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     RoomMember[]
+  clipboard   ClipboardItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Room member model (many-to-many relationship)
+model RoomMember {
+  id        String   @id @default(uuid())
+  userId    String
+  roomId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  role      String   @default("member") // owner, admin, member
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, roomId])
+}
+
+// Clipboard item model
+model ClipboardItem {
+  id          String   @id @default(uuid())
+  roomId      String
+  userId      String
+  type        String   // text, image, file
+  content     String   // Encrypted content or file path
+  title       String?
+  category    String?  // For classification
+  meta        String?  // Additional metadata (encrypted)
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([roomId])
+  @@index([userId])
+}

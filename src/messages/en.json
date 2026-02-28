@@ -1,0 +1,209 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "copy": "Copy",
+    "upload": "Upload",
+    "back": "Back",
+    "close": "Close"
+  },
+  "Navbar": {
+    "title": "Network Clipboard",
+    "rooms": "Rooms",
+    "apiDocs": "API Docs",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "Home": {
+    "title": "Network Clipboard",
+    "subtitle": "Sync your clipboard across all devices. Secure, fast, and easy to use.",
+    "getStarted": "Get Started",
+    "features": {
+      "encrypted": {
+        "title": "Encrypted Storage",
+        "description": "All your clipboard content is encrypted and stored securely."
+      },
+      "sync": {
+        "title": "Real-time Sync",
+        "description": "Access your clipboard from any device, anytime, anywhere."
+      },
+      "formats": {
+        "title": "Multiple Formats",
+        "description": "Store text, images, and files in your clipboard."
+      },
+      "rooms": {
+        "title": "Room-based Organization",
+        "description": "Organize your content in separate rooms for different purposes."
+      },
+      "api": {
+        "title": "API Access",
+        "description": "Integrate with third-party applications using our REST API."
+      },
+      "mobile": {
+        "title": "Mobile Friendly",
+        "description": "Works perfectly on all screen sizes, from phones to desktops."
+      }
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Create Account",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "username": "Username",
+      "usernamePlaceholder": "Choose a username",
+      "password": "Password",
+      "passwordPlaceholder": "Choose a password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "login": "Login",
+      "apiKeyTitle": "Important: Save your API key",
+      "apiKeyDescription": "This key is used for third-party API access. You can regenerate it later if needed.",
+      "continue": "Continue to Dashboard"
+    },
+    "errors": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "loginFailed": "Login failed",
+      "registrationFailed": "Registration failed",
+      "invalidCredentials": "Invalid email or password",
+      "userExists": "Email or username already exists"
+    }
+  },
+  "Rooms": {
+    "title": "My Rooms",
+    "createRoom": "Create Room",
+    "joinRoom": "Join Room",
+    "noRooms": "You're not a member of any rooms yet.",
+    "joinARoom": "Join a Room",
+    "createARoom": "Create a Room",
+    "members": "members",
+    "items": "items",
+    "owner": "Owner",
+    "member": "Member",
+    "delete": "Delete",
+    "deleteError": "Failed to delete",
+    "deleteConfirmTitle": "Confirm Delete Room",
+    "deleteConfirmMessage": "Are you sure you want to delete this room? This action cannot be undone.",
+    "deleteWarning": "Warning: All content in the room will be permanently deleted!",
+    "create": {
+      "title": "Create New Room",
+      "nameLabel": "Room Name",
+      "namePlaceholder": "Enter room name",
+      "descriptionLabel": "Description (optional)",
+      "descriptionPlaceholder": "Enter room description",
+      "cancel": "Cancel",
+      "submit": "Create"
+    },
+    "join": {
+      "title": "Join Room",
+      "codeLabel": "Room Code",
+      "codePlaceholder": "Enter 6-character code",
+      "cancel": "Cancel",
+      "submit": "Join"
+    },
+    "delete_confirm": {
+      "cancel": "Cancel",
+      "submit": "Confirm Delete"
+    }
+  },
+  "Clipboard": {
+    "title": "Clipboard",
+    "back": "Back",
+    "all": "All",
+    "addText": "Add Text",
+    "uploadFile": "Upload File",
+    "categoryPlaceholder": "Category (optional)",
+    "textPlaceholder": "Enter text to add to clipboard...",
+    "noItems": "No clipboard items yet. Add text or upload files above.",
+    "untitled": "Untitled",
+    "copySuccess": "Copied!",
+    "copyError": "Failed to copy",
+    "deleteConfirm": "Are you sure you want to delete?",
+    "deleteSuccess": "Deleted successfully",
+    "uploadSuccess": "Uploaded successfully",
+    "uploadError": "Failed to upload",
+    "addError": "Failed to add item",
+    "edit": {
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "ApiDocs": {
+    "title": "API Documentation",
+    "description": "Use our REST API to integrate with third-party applications.",
+    "loginRequired": "Please",
+    "loginLink": "login",
+    "loginSuffix": "to view your API key.",
+    "apiKeyTitle": "Your API Key",
+    "copy": "Copy",
+    "copySuccess": "Copied!",
+    "usage": "Use this key in the Authorization header:",
+    "authentication": {
+      "title": "Authentication",
+      "description": "All API requests require authentication using your API key in the Authorization header."
+    },
+    "endpoints": {
+      "title": "Endpoints",
+      "getRooms": {
+        "method": "GET",
+        "path": "/api/external/rooms",
+        "description": "Get all rooms you are a member of."
+      },
+      "getClipboard": {
+        "method": "GET",
+        "path": "/api/external/clipboard?roomId=ROOM_ID",
+        "description": "Get all clipboard items in a room."
+      },
+      "createClipboard": {
+        "method": "POST",
+        "path": "/api/external/clipboard",
+        "description": "Create a new clipboard item.",
+        "bodyTitle": "Body:"
+      },
+      "deleteClipboard": {
+        "method": "DELETE",
+        "path": "/api/external/clipboard?id=ITEM_ID",
+        "description": "Delete a clipboard item."
+      }
+    },
+    "examples": {
+      "title": "Example Usage",
+      "curl": "cURL:",
+      "javascript": "JavaScript:"
+    }
+  },
+  "Toast": {
+    "copySuccess": "Copied to clipboard",
+    "copyError": "Failed to copy, please copy manually",
+    "deleteSuccess": "Deleted successfully",
+    "deleteError": "Failed to delete",
+    "uploadSuccess": "Uploaded successfully",
+    "uploadError": "Failed to upload",
+    "createSuccess": "Created successfully",
+    "createError": "Failed to create",
+    "updateSuccess": "Updated successfully",
+    "updateError": "Failed to update",
+    "joinSuccess": "Joined successfully",
+    "joinError": "Failed to join"
+  }
+}

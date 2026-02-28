@@ -1,0 +1,209 @@
+{
+  "Common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "save": "保存",
+    "copy": "复制",
+    "upload": "上传",
+    "back": "返回",
+    "close": "关闭"
+  },
+  "Navbar": {
+    "title": "网络剪切板",
+    "rooms": "房间",
+    "apiDocs": "API 文档",
+    "login": "登录",
+    "register": "注册",
+    "logout": "退出"
+  },
+  "Home": {
+    "title": "网络剪切板",
+    "subtitle": "在所有设备间同步你的剪切板。安全、快速、易用。",
+    "getStarted": "开始使用",
+    "features": {
+      "encrypted": {
+        "title": "加密存储",
+        "description": "所有剪切板内容都经过加密并安全存储。"
+      },
+      "sync": {
+        "title": "实时同步",
+        "description": "随时随地从任何设备访问你的剪切板。"
+      },
+      "formats": {
+        "title": "多种格式",
+        "description": "在剪切板中存储文本、图片和文件。"
+      },
+      "rooms": {
+        "title": "房间管理",
+        "description": "为不同用途创建独立的房间来组织内容。"
+      },
+      "api": {
+        "title": "API 访问",
+        "description": "使用我们的 REST API 与第三方应用集成。"
+      },
+      "mobile": {
+        "title": "移动友好",
+        "description": "完美适配所有屏幕尺寸，从手机到桌面。"
+      }
+    }
+  },
+  "Auth": {
+    "login": {
+      "title": "登录",
+      "email": "邮箱",
+      "emailPlaceholder": "输入你的邮箱",
+      "password": "密码",
+      "passwordPlaceholder": "输入你的密码",
+      "submit": "登录",
+      "noAccount": "还没有账号？",
+      "register": "注册"
+    },
+    "register": {
+      "title": "创建账号",
+      "email": "邮箱",
+      "emailPlaceholder": "输入你的邮箱",
+      "username": "用户名",
+      "usernamePlaceholder": "选择用户名",
+      "password": "密码",
+      "passwordPlaceholder": "设置密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "确认你的密码",
+      "submit": "注册",
+      "hasAccount": "已有账号？",
+      "login": "登录",
+      "apiKeyTitle": "重要：保存你的 API 密钥",
+      "apiKeyDescription": "此密钥用于第三方 API 访问。如有需要，你可以稍后重新生成。",
+      "continue": "继续到控制台"
+    },
+    "errors": {
+      "passwordMismatch": "密码不匹配",
+      "passwordTooShort": "密码必须至少 6 个字符",
+      "loginFailed": "登录失败",
+      "registrationFailed": "注册失败",
+      "invalidCredentials": "邮箱或密码错误",
+      "userExists": "邮箱或用户名已存在"
+    }
+  },
+  "Rooms": {
+    "title": "我的房间",
+    "createRoom": "创建房间",
+    "joinRoom": "加入房间",
+    "noRooms": "你还不是任何房间的成员。",
+    "joinARoom": "加入房间",
+    "createARoom": "创建房间",
+    "members": "成员",
+    "items": "内容",
+    "owner": "所有者",
+    "member": "成员",
+    "delete": "删除",
+    "deleteError": "删除失败",
+    "deleteConfirmTitle": "确认删除房间",
+    "deleteConfirmMessage": "确定要删除这个房间吗？此操作不可撤销。",
+    "deleteWarning": "警告：删除后房间内的所有内容都将被永久删除！",
+    "create": {
+      "title": "创建新房间",
+      "nameLabel": "房间名称",
+      "namePlaceholder": "输入房间名称",
+      "descriptionLabel": "描述（可选）",
+      "descriptionPlaceholder": "输入房间描述",
+      "cancel": "取消",
+      "submit": "创建"
+    },
+    "join": {
+      "title": "加入房间",
+      "codeLabel": "房间代码",
+      "codePlaceholder": "输入 6 位代码",
+      "cancel": "取消",
+      "submit": "加入"
+    },
+    "delete_confirm": {
+      "cancel": "取消",
+      "submit": "确认删除"
+    }
+  },
+  "Clipboard": {
+    "title": "剪切板",
+    "back": "返回",
+    "all": "全部",
+    "addText": "添加文本",
+    "uploadFile": "上传文件",
+    "categoryPlaceholder": "分类（可选）",
+    "textPlaceholder": "输入文本添加到剪切板...",
+    "noItems": "还没有剪切板内容。在上方添加文本或上传文件。",
+    "untitled": "未命名",
+    "copySuccess": "复制成功！",
+    "copyError": "复制失败",
+    "deleteConfirm": "确定要删除吗？",
+    "deleteSuccess": "删除成功",
+    "uploadSuccess": "上传成功",
+    "uploadError": "上传失败",
+    "addError": "添加失败",
+    "edit": {
+      "save": "保存",
+      "cancel": "取消"
+    }
+  },
+  "ApiDocs": {
+    "title": "API 文档",
+    "description": "使用我们的 REST API 与第三方应用集成。",
+    "loginRequired": "请",
+    "loginLink": "登录",
+    "loginSuffix": "查看你的 API 密钥。",
+    "apiKeyTitle": "你的 API 密钥",
+    "copy": "复制",
+    "copySuccess": "已复制！",
+    "usage": "在 Authorization 请求头中使用此密钥：",
+    "authentication": {
+      "title": "认证方式",
+      "description": "所有 API 请求都需要在 Authorization 请求头中使用 API 密钥进行认证。"
+    },
+    "endpoints": {
+      "title": "API 端点",
+      "getRooms": {
+        "method": "GET",
+        "path": "/api/external/rooms",
+        "description": "获取你加入的所有房间。"
+      },
+      "getClipboard": {
+        "method": "GET",
+        "path": "/api/external/clipboard?roomId=ROOM_ID",
+        "description": "获取房间中的所有剪切板内容。"
+      },
+      "createClipboard": {
+        "method": "POST",
+        "path": "/api/external/clipboard",
+        "description": "创建新的剪切板内容。",
+        "bodyTitle": "请求体："
+      },
+      "deleteClipboard": {
+        "method": "DELETE",
+        "path": "/api/external/clipboard?id=ITEM_ID",
+        "description": "删除剪切板内容。"
+      }
+    },
+    "examples": {
+      "title": "使用示例",
+      "curl": "cURL 示例：",
+      "javascript": "JavaScript 示例："
+    }
+  },
+  "Toast": {
+    "copySuccess": "已复制到剪贴板",
+    "copyError": "复制失败，请手动复制",
+    "deleteSuccess": "删除成功",
+    "deleteError": "删除失败",
+    "uploadSuccess": "上传成功",
+    "uploadError": "上传失败",
+    "createSuccess": "创建成功",
+    "createError": "创建失败",
+    "updateSuccess": "更新成功",
+    "updateError": "更新失败",
+    "joinSuccess": "加入成功",
+    "joinError": "加入失败"
+  }
+}
