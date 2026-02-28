@@ -30,7 +30,7 @@ exit
 
 ### 3. 访问应用
 
-打开浏览器访问：http://localhost:3000
+打开浏览器访问：**http://localhost:7707**
 
 ## 环境变量
 
@@ -194,7 +194,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
+      - "7707:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:

@@ -6,7 +6,7 @@ services:
     container_name: clipboard-app
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "7707:3000"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=file:/app/data/dev.db
