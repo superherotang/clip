@@ -18,6 +18,7 @@ COPY . .
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 
 # Generate Prisma Client
+ENV DATABASE_URL="file:./dev.db"
 RUN corepack enable pnpm && pnpm prisma generate
 
 # Build Next.js
