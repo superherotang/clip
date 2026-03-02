@@ -16,6 +16,7 @@ RUN pnpm prisma generate
 # Copy source code and configs
 COPY src ./src
 COPY public ./public
+COPY scripts ./scripts
 COPY next.config.ts ./
 COPY tsconfig.json ./
 COPY postcss.config.mjs ./
