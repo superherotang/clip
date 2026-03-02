@@ -19,7 +19,7 @@ COPY . .
 # Create data directory
 RUN mkdir -p /app/data
 
-# Generate Prisma Client with correct path
+# Generate Prisma Client
 ENV DATABASE_URL="file:/app/data/dev.db"
 RUN corepack enable pnpm && pnpm prisma generate
 
