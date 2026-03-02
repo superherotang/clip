@@ -5,7 +5,9 @@ import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
+    console.log("=== Creating admin user ===");
     const { username, password } = await request.json();
+    console.log("Username:", username);
 
     // Validate input
     if (!username || !password) {
@@ -30,9 +32,11 @@ export async function POST(request: Request) {
     }
 
     // Check if admin already exists
+    console.log("Checking if admin exists...");
     const existingAdmin = await prisma.user.count({
       where: { role: "admin" }
     });
+    console.log("Existing admin count:", existingAdmin);
 
     if (existingAdmin > 0) {
       return NextResponse.json(
@@ -54,7 +58,9 @@ export async function POST(request: Request) {
     }
 
     // Create admin user
+    console.log("Hashing password...");
     const hashedPassword = await hashPassword(password);
+    console.log("Creating admin user in database...");
     const admin = await prisma.user.create({
       data: {
         username,
@@ -92,8 +98,17 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Error creating admin:", error);
+    // Log more details for debugging
+    if (error instanceof Error) {
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
     return NextResponse.json(
-      { error: "Failed to create admin user" },
+      {
+        error: "Failed to create admin user",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
   }
