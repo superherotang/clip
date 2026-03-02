@@ -7,7 +7,7 @@ const prisma = new PrismaClient({ adapter });
 
 async function initDatabase() {
   console.log('Initializing database schema...');
-  
+
   try {
     // Create tables
     await prisma.$executeRawUnsafe(`
@@ -23,6 +23,21 @@ async function initDatabase() {
       )
     `);
     console.log('✓ User table created');
+
+    // Add missing columns if they don't exist (for existing databases)
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN "role" TEXT NOT NULL DEFAULT 'user'`);
+      console.log('✓ Added role column to User table');
+    } catch (e) {
+      // Column already exists or other error, ignore
+    }
+
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN "isActive" BOOLEAN NOT NULL DEFAULT 1`);
+      console.log('✓ Added isActive column to User table');
+    } catch (e) {
+      // Column already exists or other error, ignore
+    }
     
     await prisma.$executeRawUnsafe(`
       CREATE TABLE IF NOT EXISTS "Room" (
