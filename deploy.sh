@@ -16,8 +16,8 @@ export ENCRYPTION_KEY=${ENCRYPTION_KEY:-$(openssl rand -hex 32)}
 echo "=== 重新构建并启动 ==="
 docker-compose up -d --build --force-recreate --no-cache
 
-echo "=== 等待 15 秒 ==="
-sleep 15
+echo "=== 等待 20 秒 ==="
+sleep 20
 
 echo "=== 查看日志 ==="
 docker-compose logs --tail=100 app
