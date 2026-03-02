@@ -5,9 +5,8 @@ cd /home/tang/clip
 echo "=== 停止旧容器 ==="
 docker-compose down
 
-echo "=== 删除旧卷 ==="
+echo "=== 删除旧卷（重要！）==="
 docker volume rm clipboard_clipboard-data 2>/dev/null || true
-docker volume rm clipboard_clipboard-uploads 2>/dev/null || true
 
 echo "=== 设置环境变量 ==="
 export JWT_SECRET=${JWT_SECRET:-$(openssl rand -hex 32)}

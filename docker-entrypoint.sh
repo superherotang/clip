@@ -1,21 +1,19 @@
 #!/bin/sh
 
-# 显示配置信息
 echo "=== Application Configuration ==="
 echo "DATABASE_URL: $DATABASE_URL"
-echo "NODE_ENV: $NODE_ENV"
 echo "Working directory: $(pwd)"
 echo "Data directory: $(ls -la /app/data 2>&1)"
 echo "================================="
 
-# 确保数据目录存在
+# Ensure data directory exists
 mkdir -p /app/data
 
-# 运行 Prisma 迁移（使用 npx）
-echo "Running Prisma migrations..."
+# Initialize database
+echo "Initializing database..."
 cd /app
-npx prisma migrate deploy 2>&1 || echo "Migration completed"
+node scripts/init-db.js
 
-# 启动应用
+# Start application
 echo "Starting application..."
 exec node server.js
