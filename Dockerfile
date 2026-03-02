@@ -13,6 +13,15 @@ COPY prisma ./prisma
 ENV DATABASE_URL="file:/app/data/dev.db"
 RUN pnpm prisma generate
 
+# Copy source code and configs
+COPY src ./src
+COPY public ./public
+COPY next.config.ts ./
+COPY next-env.d.ts ./
+COPY tsconfig.json ./
+COPY postcss.config.mjs ./
+COPY eslint.config.mjs ./
+
 # Build Next.js
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="file:/app/data/dev.db"
