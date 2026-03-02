@@ -3,18 +3,24 @@
 
 cd /home/tang/clip
 
-# 停止并删除容器
+echo "=== Stopping containers ==="
 docker-compose down
 
-# 删除旧的数据卷（可选，如果需要保留数据请注释掉这行）
-docker volume rm clipboard_clipboard-data
+echo "=== Removing old volumes ==="
+docker volume rm clipboard_clipboard-data 2>/dev/null || echo "Volume didn't exist"
 
-# 设置环境变量
+echo "=== Setting environment variables ==="
 export JWT_SECRET=$(openssl rand -hex 32)
 export ENCRYPTION_KEY=$(openssl rand -hex 32)
 
-# 重新构建并启动
-docker-compose up -d --build
+echo "JWT_SECRET: $JWT_SECRET"
+echo "ENCRYPTION_KEY: $ENCRYPTION_KEY"
 
-# 查看日志
+echo "=== Building and starting containers ==="
+docker-compose up -d --build --no-cache
+
+echo "=== Waiting for application to start ==="
+sleep 10
+
+echo "=== Showing logs ==="
 docker-compose logs -f app

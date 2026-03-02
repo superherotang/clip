@@ -1,5 +1,11 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
+import path from "path";
+
+// Use absolute path for database
+const dbPath = process.env.DATABASE_URL 
+  ? process.env.DATABASE_URL.replace("file:", "")
+  : path.join(process.cwd(), "prisma", "dev.db");
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -7,6 +13,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL || "file:/app/data/dev.db",
+    url: `file:${dbPath}`,
   },
 });

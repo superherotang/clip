@@ -13,8 +13,12 @@ services:
       - JWT_SECRET=${JWT_SECRET:-change-this-to-a-random-string-in-production}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY:-change-this-to-a-random-string-in-production}
     volumes:
-      - clipboard-data:/app/data
-      - clipboard-uploads:/app/public/uploads
+      # 使用宿主机目录（更容易调试）
+      - ./data:/app/data
+      - ./public/uploads:/app/public/uploads
+      # 或者使用 Docker 卷（更可靠）
+      # - clipboard-data:/app/data
+      # - clipboard-uploads:/app/public/uploads
     networks:
       - clipboard-network
     healthcheck:

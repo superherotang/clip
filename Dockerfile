@@ -16,6 +16,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Create data directory
+RUN mkdir -p /app/data
+
 # Generate Prisma Client with correct path
 ENV DATABASE_URL="file:/app/data/dev.db"
 RUN corepack enable pnpm && pnpm prisma generate
@@ -45,6 +48,9 @@ COPY --from=builder /app/prisma ./prisma
 # Copy entrypoint script
 COPY --chown=nextjs:nodejs docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
+
+# Create data and uploads directories
+RUN mkdir -p /app/data /app/public/uploads && chown -R nextjs:nodejs /app/data /app/public/uploads
 
 USER nextjs
 
