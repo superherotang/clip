@@ -33,8 +33,8 @@ export function LoginForm() {
         throw new Error(data.error || t("Auth.errors.loginFailed"));
       }
 
-      router.push("/rooms");
-      router.refresh();
+      // Use window.location for full page reload to ensure session cookie is properly set
+      window.location.href = "/rooms";
     } catch (err) {
       setError(err instanceof Error ? err.message : t("Auth.errors.loginFailed"));
     } finally {
