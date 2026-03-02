@@ -67,10 +67,15 @@ export async function POST(request: NextRequest) {
       message: "Login successful",
     });
 
+    // Determine if the request is over HTTPS
+    const isHttps = request.headers.get('x-forwarded-proto') === 'https' || request.url.startsWith('https://');
+
+    console.log('[Login] Setting cookie with secure:', isHttps);
+
     // Set session cookie
     response.cookies.set("session", sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isHttps,
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",

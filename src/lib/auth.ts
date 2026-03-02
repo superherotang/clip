@@ -56,16 +56,23 @@ export async function getSession(): Promise<Session | null> {
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value;
 
+    console.log("[getSession] Token exists:", !!token);
+
     if (!token) return null;
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
-    return {
+    const session = {
       userId: (payload as any).userId,
       username: (payload as any).username,
       email: (payload as any).email || "",
       role: (payload as any).role || "user",
     };
-  } catch {
+
+    console.log("[getSession] Session:", { userId: session.userId, username: session.username, role: session.role });
+
+    return session;
+  } catch (error) {
+    console.error("[getSession] Error:", error);
     return null;
   }
 }

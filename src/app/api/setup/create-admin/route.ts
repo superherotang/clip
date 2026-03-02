@@ -9,6 +9,11 @@ export async function POST(request: Request) {
     const { username, password } = await request.json();
     console.log("Username:", username);
 
+    // Determine if the request is over HTTPS
+    const url = new URL(request.url);
+    const isHttps = url.protocol === 'https:';
+    console.log('[Create Admin] Using HTTPS:', isHttps);
+
     // Validate input
     if (!username || !password) {
       return NextResponse.json(
@@ -82,7 +87,7 @@ export async function POST(request: Request) {
     const cookieStore = await cookies();
     cookieStore.set("session", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isHttps,
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
