@@ -6,6 +6,9 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
+# Copy Prisma schema before generating
+COPY prisma ./prisma
+
 # Generate Prisma Client
 ENV DATABASE_URL="file:/app/data/dev.db"
 RUN pnpm prisma generate
