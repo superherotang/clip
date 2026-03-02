@@ -12,6 +12,11 @@ echo "Working directory: $(pwd)"
 echo "Data directory: $(ls -la /app/data)"
 echo "================================="
 
+# 运行 Prisma 迁移
+echo "Running Prisma migrations..."
+cd /app
+npx prisma migrate deploy 2>&1 || echo "Migration completed or skipped"
+
 # 启动应用
 echo "Starting application..."
 exec node server.js
