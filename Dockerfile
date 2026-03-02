@@ -17,7 +17,6 @@ RUN pnpm prisma generate
 COPY src ./src
 COPY public ./public
 COPY next.config.ts ./
-COPY next-env.d.ts ./
 COPY tsconfig.json ./
 COPY postcss.config.mjs ./
 COPY eslint.config.mjs ./
