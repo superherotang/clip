@@ -1,12 +1,13 @@
 #!/bin/sh
 
-# 等待数据库文件准备就绪
-sleep 2
+# 确保数据目录存在
+mkdir -p /app/data
+mkdir -p /app/public/uploads
 
-# 运行 Prisma 迁移
+# 使用 npx 运行 Prisma（因为 pnpm 可能不可用）
 echo "Running Prisma migrations..."
-pnpm prisma migrate deploy
-pnpm prisma generate
+npx prisma migrate deploy 2>/dev/null || true
+npx prisma generate 2>/dev/null || true
 
 # 启动应用
 echo "Starting application..."

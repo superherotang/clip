@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -16,11 +16,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
+# Generate Prisma Client with correct path
+ENV DATABASE_URL="file:/app/data/dev.db"
 RUN corepack enable pnpm && pnpm prisma generate
 
 # Build Next.js
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL="file:/app/data/dev.db"
 RUN corepack enable pnpm && pnpm build
 
 # Production image, copy all the files and run next
@@ -29,6 +31,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL="file:/app/data/dev.db"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -45,9 +48,9 @@ RUN chmod +x /docker-entrypoint.sh
 
 USER nextjs
 
-EXPOSE 7707
+EXPOSE 3000
 
-ENV PORT=7707
+ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
