@@ -5,6 +5,10 @@
 ### 1. 构建并启动
 
 ```bash
+# 设置环境变量
+export JWT_SECRET=$(openssl rand -hex 32)
+export ENCRYPTION_KEY=$(openssl rand -hex 32)
+
 # 构建并启动容器
 docker-compose up -d --build
 
