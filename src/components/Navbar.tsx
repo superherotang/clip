@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
@@ -11,30 +11,44 @@ interface User {
   userId: string;
   username: string;
   email: string;
+  role: string;
 }
 
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const t = useTranslations();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch("/api/auth/me");
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      } finally {
-        setIsLoading(false);
+  const fetchUser = async () => {
+    try {
+      const response = await fetch("/api/auth/me");
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
       }
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, [pathname]); // Re-fetch when route changes
+
+  // Also refetch when window gains focus (handles multiple tabs)
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchUser();
     };
 
-    fetchUser();
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
   }, []);
 
   const handleLogout = async () => {
@@ -91,6 +105,22 @@ export function Navbar() {
                 >
                   {t("Navbar.apiDocs")}
                 </Link>
+                {user.role === "admin" && (
+                  <>
+                    <Link
+                      href="/admin/users"
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors hidden sm:block"
+                    >
+                      {t("Navbar.users")}
+                    </Link>
+                    <Link
+                      href="/admin/settings"
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors hidden sm:block"
+                    >
+                      {t("Navbar.settings")}
+                    </Link>
+                  </>
+                )}
                 <span className="text-gray-600 dark:text-gray-400 text-sm hidden sm:inline">
                   {user.username}
                 </span>

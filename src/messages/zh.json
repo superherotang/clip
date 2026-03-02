@@ -17,6 +17,8 @@
     "title": "网络剪切板",
     "rooms": "房间",
     "apiDocs": "API 文档",
+    "users": "用户管理",
+    "settings": "设置",
     "login": "登录",
     "register": "注册",
     "logout": "退出"
@@ -205,5 +207,84 @@
     "updateError": "更新失败",
     "joinSuccess": "加入成功",
     "joinError": "加入失败"
+  },
+  "Setup": {
+    "title": "欢迎使用剪切板",
+    "description": "创建管理员账号以开始使用",
+    "username": "用户名",
+    "usernamePlaceholder": "输入管理员用户名",
+    "password": "密码",
+    "passwordPlaceholder": "输入管理员密码",
+    "confirmPassword": "确认密码",
+    "confirmPasswordPlaceholder": "确认管理员密码",
+    "submit": "创建管理员账号",
+    "errors": {
+      "passwordMismatch": "密码不匹配",
+      "usernameRequired": "用户名不能为空",
+      "passwordRequired": "密码不能为空",
+      "usernameTooShort": "用户名必须至少 3 个字符",
+      "passwordTooShort": "密码必须至少 6 个字符",
+      "failed": "创建管理员账号失败",
+      "usernameExists": "用户名已存在",
+      "adminExists": "管理员已存在"
+    }
+  },
+  "Admin": {
+    "settings": {
+      "title": "系统设置",
+      "description": "管理您的应用设置",
+      "siteName": "站点名称",
+      "siteNamePlaceholder": "我的剪切板",
+      "siteDescription": "站点描述",
+      "siteDescriptionPlaceholder": "剪切板服务的简要描述",
+      "maxRoomsPerUser": "每用户最大房间数",
+      "maxClipboardItems": "每用户最大剪贴项数",
+      "allowRegistration": "允许新用户注册",
+      "allowRegistrationDescription": "禁用后，只有管理员可以创建新用户",
+      "save": "保存设置",
+      "success": "设置更新成功！",
+      "errors": {
+        "failed": "更新设置失败",
+        "siteNameRequired": "站点名称不能为空",
+        "invalidMaxRooms": "每用户最大房间数必须是正数",
+        "invalidMaxItems": "每用户最大剪贴项数必须是正数"
+      }
+    },
+    "users": {
+      "title": "用户管理",
+      "description": "管理用户及其权限",
+      "createUser": "创建用户",
+      "userList": "用户列表",
+      "noUsers": "还没有用户",
+      "username": "用户名",
+      "usernamePlaceholder": "输入用户名",
+      "password": "密码",
+      "passwordPlaceholder": "输入密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "确认密码",
+      "role": "角色",
+      "roles": {
+        "admin": "管理员",
+        "user": "用户"
+      },
+      "deleteConfirm": "确定要删除这个用户吗？",
+      "inactive": "未激活",
+      "rooms": "房间",
+      "created": "创建时间",
+      "errors": {
+        "passwordMismatch": "密码不匹配",
+        "usernameTooShort": "用户名必须至少 3 个字符",
+        "passwordTooShort": "密码必须至少 6 个字符",
+        "createFailed": "创建用户失败",
+        "deleteFailed": "删除用户失败"
+      }
+    }
+  },
+  "Register": {
+    "disabled": {
+      "title": "注册已关闭",
+      "description": "新用户注册当前已关闭。请联系管理员获取访问权限。",
+      "goToLogin": "前往登录"
+    }
   }
 }

@@ -21,6 +21,8 @@ export async function POST(request: NextRequest) {
         id: true,
         username: true,
         password: true,
+        role: true,
+        isActive: true,
       },
     });
 
@@ -28,6 +30,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Invalid username or password" },
         { status: 401 }
+      );
+    }
+
+    // Check if user is active
+    if (!user.isActive) {
+      return NextResponse.json(
+        { error: "Account is disabled" },
+        { status: 403 }
       );
     }
 
@@ -46,6 +56,7 @@ export async function POST(request: NextRequest) {
       id: user.id,
       username: user.username,
       email: "",
+      role: user.role,
     });
 
     const response = NextResponse.json({

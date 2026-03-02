@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hashPassword, generateApiKey, createSession } from "@/lib/auth";
+import { hashPassword, generateApiKey, createSession, getSystemSettings } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,6 +25,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Username must be at least 3 characters" },
         { status: 400 }
+      );
+    }
+
+    // Check if registration is allowed
+    const settings = await getSystemSettings();
+    if (!settings.allowRegistration) {
+      return NextResponse.json(
+        { error: "Registration is currently disabled" },
+        { status: 403 }
       );
     }
 
@@ -62,6 +71,7 @@ export async function POST(request: NextRequest) {
       id: user.id,
       username: user.username,
       email: "",
+      role: "user",
     });
 
     const response = NextResponse.json({

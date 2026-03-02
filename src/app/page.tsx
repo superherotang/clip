@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -8,6 +9,15 @@ import Link from "next/link";
 export default async function Home() {
   const session = await getSession();
   const t = await getTranslations("Home");
+
+  // Check if setup is needed
+  const adminCount = await prisma.user.count({
+    where: { role: "admin" }
+  });
+
+  if (adminCount === 0) {
+    redirect("/setup");
+  }
 
   if (session) {
     redirect("/rooms");

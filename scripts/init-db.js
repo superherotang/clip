@@ -17,6 +17,8 @@ async function initDatabase() {
         "username" TEXT UNIQUE NOT NULL,
         "password" TEXT NOT NULL,
         "apiKey" TEXT UNIQUE NOT NULL,
+        "role" TEXT NOT NULL DEFAULT 'user',
+        "isActive" BOOLEAN NOT NULL DEFAULT 1,
         "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" DATETIME NOT NULL
       )
@@ -69,7 +71,27 @@ async function initDatabase() {
       )
     `);
     console.log('✓ ClipboardItem table created');
-    
+
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "SystemSettings" (
+        "id" TEXT PRIMARY KEY,
+        "allowRegistration" BOOLEAN NOT NULL DEFAULT 1,
+        "siteName" TEXT NOT NULL DEFAULT 'Clipboard',
+        "siteDescription" TEXT,
+        "maxRoomsPerUser" INTEGER NOT NULL DEFAULT 10,
+        "maxClipboardItems" INTEGER NOT NULL DEFAULT 100,
+        "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ SystemSettings table created');
+
+    // Initialize default system settings
+    await prisma.$executeRawUnsafe(`
+      INSERT OR IGNORE INTO "SystemSettings" ("id", "allowRegistration", "siteName", "maxRoomsPerUser", "maxClipboardItems")
+      VALUES ('site', 1, 'Clipboard', 10, 100)
+    `);
+    console.log('✓ Default system settings initialized');
+
     console.log('Database initialized successfully!');
   } catch (error) {
     console.error('Error initializing database:', error.message);

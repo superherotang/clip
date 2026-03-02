@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protected routes
-  const protectedRoutes = ["/rooms", "/clipboard", "/api-docs"];
+  const protectedRoutes = ["/rooms", "/clipboard", "/api-docs", "/admin"];
   const authRoutes = ["/login", "/register"];
 
   // Check if trying to access protected route without authentication

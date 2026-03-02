@@ -28,17 +28,20 @@ export interface Session {
   userId: string;
   username: string;
   email: string;
+  role: string;
 }
 
 export async function createSession(user: {
   id: string;
   username: string;
   email: string;
+  role: string;
 }): Promise<string> {
   const token = await new SignJWT({
     userId: user.id,
     username: user.username,
     email: user.email,
+    role: user.role,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -60,6 +63,7 @@ export async function getSession(): Promise<Session | null> {
       userId: (payload as any).userId,
       username: (payload as any).username,
       email: (payload as any).email || "",
+      role: (payload as any).role || "user",
     };
   } catch {
     return null;
@@ -70,7 +74,7 @@ export async function validateApiKey(apiKey: string): Promise<Session | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { apiKey },
-      select: { id: true, username: true },
+      select: { id: true, username: true, role: true },
     });
 
     if (!user) return null;
@@ -79,6 +83,7 @@ export async function validateApiKey(apiKey: string): Promise<Session | null> {
       userId: user.id,
       username: user.username,
       email: "",
+      role: user.role,
     };
   } catch {
     return null;
@@ -91,4 +96,51 @@ export async function requireAuth(): Promise<Session> {
     throw new Error("Unauthorized");
   }
   return session;
+}
+
+export async function requireAdmin(session?: Session): Promise<Session> {
+  const currentSession = session || await getSession();
+  if (!currentSession || currentSession.role !== "admin") {
+    throw new Error("Admin access required");
+  }
+
+  // Verify user is still active and admin in database
+  const user = await prisma.user.findUnique({
+    where: { id: currentSession.userId },
+    select: { role: true, isActive: true }
+  });
+
+  if (!user || !user.isActive || user.role !== "admin") {
+    throw new Error("Admin access required");
+  }
+
+  return currentSession;
+}
+
+export interface SystemSettings {
+  allowRegistration: boolean;
+  siteName: string;
+  siteDescription: string | null;
+  maxRoomsPerUser: number;
+  maxClipboardItems: number;
+}
+
+export async function getSystemSettings(): Promise<SystemSettings> {
+  let settings = await prisma.systemSettings.findUnique({
+    where: { id: "site" }
+  });
+
+  if (!settings) {
+    settings = await prisma.systemSettings.create({
+      data: { id: "site" }
+    });
+  }
+
+  return {
+    allowRegistration: settings.allowRegistration,
+    siteName: settings.siteName,
+    siteDescription: settings.siteDescription,
+    maxRoomsPerUser: settings.maxRoomsPerUser,
+    maxClipboardItems: settings.maxClipboardItems,
+  };
 }
