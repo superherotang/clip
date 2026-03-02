@@ -11,9 +11,14 @@ export default async function Home() {
   const t = await getTranslations("Home");
 
   // Check if setup is needed
-  const adminCount = await prisma.user.count({
-    where: { role: "admin" }
-  });
+  let adminCount = 0;
+  try {
+    adminCount = await prisma.user.count({
+      where: { role: "admin" }
+    });
+  } catch (error) {
+    console.error('Error checking admin count:', error);
+  }
 
   if (adminCount === 0) {
     redirect("/setup");

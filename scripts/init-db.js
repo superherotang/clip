@@ -1,10 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
-const { PrismaLibSql } = require('@prisma/adapter-libsql');
-const { createClient } = require('@libsql/client');
 
-const dbUrl = process.env.DATABASE_URL || 'file:/app/data/dev.db';
-const adapter = new PrismaLibSql({ url: dbUrl });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  log: ['query', 'error', 'warn'],
+});
 
 async function initDatabase() {
   console.log('Initializing database schema...');

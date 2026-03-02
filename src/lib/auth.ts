@@ -126,21 +126,33 @@ export interface SystemSettings {
 }
 
 export async function getSystemSettings(): Promise<SystemSettings> {
-  let settings = await prisma.systemSettings.findUnique({
-    where: { id: "site" }
-  });
-
-  if (!settings) {
-    settings = await prisma.systemSettings.create({
-      data: { id: "site" }
+  try {
+    let settings = await prisma.systemSettings.findUnique({
+      where: { id: "site" }
     });
-  }
 
-  return {
-    allowRegistration: settings.allowRegistration,
-    siteName: settings.siteName,
-    siteDescription: settings.siteDescription,
-    maxRoomsPerUser: settings.maxRoomsPerUser,
-    maxClipboardItems: settings.maxClipboardItems,
-  };
+    if (!settings) {
+      settings = await prisma.systemSettings.create({
+        data: { id: "site" }
+      });
+    }
+
+    return {
+      allowRegistration: settings.allowRegistration,
+      siteName: settings.siteName,
+      siteDescription: settings.siteDescription,
+      maxRoomsPerUser: settings.maxRoomsPerUser,
+      maxClipboardItems: settings.maxClipboardItems,
+    };
+  } catch (error) {
+    // If table doesn't exist or database error, return defaults
+    console.error('Error getting system settings:', error);
+    return {
+      allowRegistration: true,
+      siteName: "Clipboard",
+      siteDescription: null,
+      maxRoomsPerUser: 10,
+      maxClipboardItems: 100,
+    };
+  }
 }
