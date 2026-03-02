@@ -13,8 +13,8 @@ services:
       - JWT_SECRET=${JWT_SECRET:-change-this-to-a-random-string-in-production}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY:-change-this-to-a-random-string-in-production}
     volumes:
-      - ./data:/app/data
-      - ./public/uploads:/app/public/uploads
+      - ./data:/app/data:z
+      - ./public/uploads:/app/public/uploads:z
     networks:
       - clipboard-network
     healthcheck:

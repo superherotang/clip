@@ -20,9 +20,10 @@ if [ -z "$ENCRYPTION_KEY" ]; then
     export ENCRYPTION_KEY=$(openssl rand -hex 32)
 fi
 
-# 创建必要目录
+# 创建必要目录并设置权限
 echo "创建必要目录..."
 mkdir -p ./data ./public/uploads
+chmod -R 755 ./data ./public/uploads
 
 # 停止旧容器
 echo "停止旧容器..."

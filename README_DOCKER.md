@@ -14,8 +14,9 @@
 export JWT_SECRET=$(openssl rand -hex 32)
 export ENCRYPTION_KEY=$(openssl rand -hex 32)
 
-# 2. 创建必要目录
+# 2. 创建必要目录并设置权限
 mkdir -p ./data ./public/uploads
+chmod -R 755 ./data ./public/uploads
 
 # 3. 构建并启动
 docker-compose up -d --build
@@ -45,6 +46,9 @@ docker-compose down
 
 # 进入容器
 docker-compose exec app sh
+
+# 修复权限问题
+docker-compose exec app chown -R nextjs:nodejs /app/data
 ```
 
 ## 数据持久化
@@ -56,3 +60,27 @@ docker-compose exec app sh
 ## 首次使用
 
 启动容器后，访问 http://localhost:7707 注册账号即可开始使用。
+
+## 常见问题
+
+### 数据库只读错误
+
+如果看到 `SQLITE_READONLY` 错误，执行：
+
+```bash
+# 停止容器
+docker-compose down
+
+# 修复宿主机目录权限
+chmod -R 755 ./data ./public/uploads
+
+# 重新启动
+docker-compose up -d
+```
+
+### 权限拒绝
+
+```bash
+# 进入容器修复权限
+docker-compose exec app chown -R nextjs:nodejs /app/data /app/public/uploads
+```
