@@ -174,7 +174,7 @@ export async function DELETE(request: NextRequest) {
     // Get the item
     const item = await prisma.clipboardItem.findUnique({
       where: { id: itemId },
-      include: { room: true },
+      select: { id: true, roomId: true },
     });
 
     if (!item) {
@@ -207,10 +207,16 @@ export async function DELETE(request: NextRequest) {
 
     console.log("[DELETE /api/clipboard] User is member, deleting item");
 
-    // Delete the item
-    await prisma.clipboardItem.delete({
+    // Delete the item with timeout protection
+    const deletePromise = prisma.clipboardItem.delete({
       where: { id: itemId },
     });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Delete operation timeout")), 10000)
+    );
+
+    await Promise.race([deletePromise, timeoutPromise]);
 
     console.log("[DELETE /api/clipboard] Item deleted successfully");
     return NextResponse.json({ message: "Item deleted successfully" });
@@ -250,9 +256,10 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Get the item
+    // Get the item (only select fields we need)
     const item = await prisma.clipboardItem.findUnique({
       where: { id },
+      select: { id: true, roomId: true, type: true },
     });
 
     if (!item) {
@@ -294,7 +301,14 @@ export async function PUT(request: NextRequest) {
     const updatedItem = await prisma.clipboardItem.update({
       where: { id },
       data: updateData,
-      include: {
+      select: {
+        id: true,
+        type: true,
+        content: true,
+        title: true,
+        category: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: { username: true },
         },
