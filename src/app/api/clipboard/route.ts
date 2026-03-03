@@ -147,8 +147,10 @@ export async function POST(request: NextRequest) {
 // DELETE /api/clipboard - Delete a clipboard item
 export async function DELETE(request: NextRequest) {
   try {
+    console.log("[DELETE /api/clipboard] Starting delete operation");
     const session = await getSession();
     if (!session) {
+      console.log("[DELETE /api/clipboard] No session found");
       return NextResponse.json(
         { error: "Not authenticated" },
         { status: 401 }
@@ -158,7 +160,11 @@ export async function DELETE(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const itemId = searchParams.get("id");
 
+    console.log("[DELETE /api/clipboard] Item ID:", itemId);
+    console.log("[DELETE /api/clipboard] User ID:", session.userId);
+
     if (!itemId) {
+      console.log("[DELETE /api/clipboard] No item ID provided");
       return NextResponse.json(
         { error: "Item ID is required" },
         { status: 400 }
@@ -172,11 +178,14 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (!item) {
+      console.log("[DELETE /api/clipboard] Item not found:", itemId);
       return NextResponse.json(
         { error: "Item not found" },
         { status: 404 }
       );
     }
+
+    console.log("[DELETE /api/clipboard] Item found, room ID:", item.roomId);
 
     // Check if user is a member of the room
     const membership = await prisma.roomMember.findUnique({
@@ -189,22 +198,33 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (!membership) {
+      console.log("[DELETE /api/clipboard] User is not a member of room:", item.roomId);
       return NextResponse.json(
         { error: "Access denied to this room" },
         { status: 403 }
       );
     }
 
+    console.log("[DELETE /api/clipboard] User is member, deleting item");
+
     // Delete the item
     await prisma.clipboardItem.delete({
       where: { id: itemId },
     });
 
+    console.log("[DELETE /api/clipboard] Item deleted successfully");
     return NextResponse.json({ message: "Item deleted successfully" });
   } catch (error) {
-    console.error("Delete clipboard error:", error);
+    console.error("[DELETE /api/clipboard] Error:", error);
+    if (error instanceof Error) {
+      console.error("[DELETE /api/clipboard] Error message:", error.message);
+      console.error("[DELETE /api/clipboard] Error stack:", error.stack);
+    }
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
   }

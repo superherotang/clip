@@ -159,8 +159,10 @@ export async function POST(request: NextRequest) {
 // DELETE /api/external/clipboard - Delete clipboard item
 export async function DELETE(request: NextRequest) {
   try {
+    console.log("[DELETE /api/external/clipboard] Starting delete operation");
     const session = await validateAuth(request);
     if (!session) {
+      console.log("[DELETE /api/external/clipboard] No valid API key");
       return NextResponse.json(
         { error: "Invalid or missing API key" },
         { status: 401 }
@@ -170,7 +172,11 @@ export async function DELETE(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const itemId = searchParams.get("id");
 
+    console.log("[DELETE /api/external/clipboard] Item ID:", itemId);
+    console.log("[DELETE /api/external/clipboard] User ID:", session.userId);
+
     if (!itemId) {
+      console.log("[DELETE /api/external/clipboard] No item ID provided");
       return NextResponse.json(
         { error: "Item ID is required" },
         { status: 400 }
@@ -183,11 +189,14 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (!item) {
+      console.log("[DELETE /api/external/clipboard] Item not found:", itemId);
       return NextResponse.json(
         { error: "Item not found" },
         { status: 404 }
       );
     }
+
+    console.log("[DELETE /api/external/clipboard] Item found, room ID:", item.roomId);
 
     // Check if user is a member of the room
     const membership = await prisma.roomMember.findUnique({
@@ -200,22 +209,33 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (!membership) {
+      console.log("[DELETE /api/external/clipboard] User is not a member of room:", item.roomId);
       return NextResponse.json(
         { error: "Access denied to this room" },
         { status: 403 }
       );
     }
 
+    console.log("[DELETE /api/external/clipboard] User is member, deleting item");
+
     // Delete the item
     await prisma.clipboardItem.delete({
       where: { id: itemId },
     });
 
+    console.log("[DELETE /api/external/clipboard] Item deleted successfully");
     return NextResponse.json({ message: "Item deleted successfully" });
   } catch (error) {
-    console.error("External API error:", error);
+    console.error("[DELETE /api/external/clipboard] Error:", error);
+    if (error instanceof Error) {
+      console.error("[DELETE /api/external/clipboard] Error message:", error.message);
+      console.error("[DELETE /api/external/clipboard] Error stack:", error.stack);
+    }
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
   }
