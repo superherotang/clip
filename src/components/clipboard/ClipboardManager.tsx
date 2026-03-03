@@ -35,6 +35,7 @@ export function ClipboardManager() {
 
   const [items, setItems] = useState<ClipboardItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [textInput, setTextInput] = useState("");
   const [category, setCategory] = useState("");
@@ -56,7 +57,11 @@ export function ClipboardManager() {
     setError("");
 
     try {
-      const response = await fetch(`/api/clipboard?roomId=${roomId}`);
+      const response = await fetch("/api/clipboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list", roomId }),
+      });
       const data = await response.json();
 
       if (!response.ok) {
@@ -79,6 +84,7 @@ export function ClipboardManager() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          action: "create",
           roomId,
           type: "text",
           content: textInput,
@@ -140,8 +146,14 @@ export function ClipboardManager() {
     setIsDeleting(itemId);
 
     try {
-      const response = await fetch(`/api/clipboard?id=${itemId}`, {
-        method: "DELETE",
+      const response = await fetch("/api/clipboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete",
+          roomId,
+          itemId,
+        }),
       });
 
       const data = await response.json();
@@ -165,9 +177,10 @@ export function ClipboardManager() {
 
     try {
       const response = await fetch("/api/clipboard", {
-        method: "PUT",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          action: "update",
           id: itemId,
           content: editContent,
         }),
@@ -208,6 +221,12 @@ export function ClipboardManager() {
     setEditContent(item.content);
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchItems();
+    setIsRefreshing(false);
+  };
+
   const categories = Array.from(
     new Set(items.map((item) => item.category).filter(Boolean))
   ) as string[];
@@ -234,6 +253,16 @@ export function ClipboardManager() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {t("Clipboard.title")}
           </h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleRefresh}
+            isLoading={isRefreshing}
+            className="ml-2"
+            title="刷新列表"
+          >
+            🔄
+          </Button>
         </div>
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-2">

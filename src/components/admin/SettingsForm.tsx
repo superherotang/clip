@@ -35,7 +35,11 @@ export function SettingsForm() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch("/api/admin/settings");
+      const response = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get" }),
+      });
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
@@ -55,9 +59,12 @@ export function SettingsForm() {
 
     try {
       const response = await fetch("/api/admin/settings", {
-        method: "PUT",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({
+          action: "update",
+          ...settings,
+        }),
       });
 
       const data = await response.json();

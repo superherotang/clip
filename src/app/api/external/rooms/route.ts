@@ -5,7 +5,7 @@ import { validateApiKey } from "@/lib/auth";
 // Middleware to validate API key from Authorization header
 async function validateAuth(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
-  
+
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return null;
   }
@@ -14,14 +14,23 @@ async function validateAuth(request: NextRequest) {
   return await validateApiKey(apiKey);
 }
 
-// GET /api/external/rooms - Get all rooms for the authenticated user
-export async function GET(request: NextRequest) {
+// POST /api/external/rooms - Get all rooms for the authenticated user
+export async function POST(request: NextRequest) {
   try {
     const session = await validateAuth(request);
     if (!session) {
       return NextResponse.json(
         { error: "Invalid or missing API key" },
         { status: 401 }
+      );
+    }
+
+    const { action } = await request.json();
+
+    if (action !== "list") {
+      return NextResponse.json(
+        { error: "Invalid action" },
+        { status: 400 }
       );
     }
 
@@ -59,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ rooms });
   } catch (error) {
-    console.error("External API error:", error);
+    console.error("External rooms API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

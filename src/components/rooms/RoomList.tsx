@@ -49,6 +49,7 @@ export function RoomList({ initialRooms }: RoomListProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          action: "create",
           name: newRoomName,
           description: newRoomDescription,
         }),
@@ -108,7 +109,9 @@ export function RoomList({ initialRooms }: RoomListProps) {
 
     try {
       const response = await fetch(`/api/rooms/${roomToDelete}`, {
-        method: "DELETE",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete" }),
       });
 
       const data = await response.json();
