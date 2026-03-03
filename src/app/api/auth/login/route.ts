@@ -71,6 +71,8 @@ export async function POST(request: NextRequest) {
     const isHttps = request.headers.get('x-forwarded-proto') === 'https' || request.url.startsWith('https://');
 
     console.log('[Login] Setting cookie with secure:', isHttps);
+    console.log('[Login] Request URL:', request.url);
+    console.log('[Login] Token length:', sessionToken.length);
 
     // Set session cookie
     response.cookies.set("session", sessionToken, {
@@ -79,6 +81,7 @@ export async function POST(request: NextRequest) {
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
+      domain: undefined, // Use current domain
     });
 
     return response;

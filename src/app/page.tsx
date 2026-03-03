@@ -40,11 +40,11 @@ export default async function Home() {
         </p>
         <div className="flex gap-4 justify-center">
           <Link href="/register">
-            <Button size="lg">{t("getStarted")}</Button>
+            <Button size="lg">{t("Auth.register.submit")}</Button>
           </Link>
           <Link href="/login">
             <Button size="lg" variant="secondary">
-              {t("getStarted")}
+              {t("Auth.login.submit")}
             </Button>
           </Link>
         </div>
