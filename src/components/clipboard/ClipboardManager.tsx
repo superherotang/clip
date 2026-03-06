@@ -354,9 +354,11 @@ export function ClipboardManager() {
                   {item.type === "text" && (
                     <span className="text-lg">📝</span>
                   )}
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {item.title || t("Clipboard.untitled")}
-                  </span>
+                  {item.title && (
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {item.title}
+                    </span>
+                  )}
                 </div>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   {item.type === "text" && (
